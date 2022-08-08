@@ -11,19 +11,6 @@
 #include "al/LiveActor/LiveActorGroup.h"
 #include "al/LiveActor/LiveActor.h"
 
-/* Define hook StubCopyright. Trampoline indicates the original function should be kept. */
-/* HOOK_DEFINE_REPLACE can be used if the original function does not need to be kept. */
-// HOOK_DEFINE_TRAMPOLINE(StubCopyright) {
-
-//     /* Define the callback for when the function is called. Don't forget to make it static and name it Callback. */
-//     static void Callback(bool enabled) {
-
-//         /* Call the original function, with the argument always being false. */
-//         Orig(false);
-//     }
-
-// };
-
 HOOK_DEFINE_REPLACE(pafCtor){
 	static void Callback(ProjectActorFactory * paf){
 		new (paf) al::ActorFactory("アクター生成");
@@ -32,16 +19,6 @@ paf->factoryCount = sizeof(actorEntries) / sizeof(actorEntries[0]);
 }
 };
 
-// MAKE_HOOK(void, pafCtor, (ProjectActorFactory * paf), {
-// 	new (paf) al::ActorFactory("アクター生成");
-// 	paf->actorTable = actorEntries;
-// 	paf->factoryCount = sizeof(actorEntries) / sizeof(actorEntries[0]);
-// });
-
-/* Declare function to dynamic link with. */
-// namespace nn::oe {
-//     void SetCopyrightVisibility(bool);
-// };
 extern "C" void _ZN19ProjectActorFactoryC2Ev(ProjectActorFactory *);
 
 extern "C" void exl_main(void *x0, void *x1)
@@ -51,7 +28,6 @@ extern "C" void exl_main(void *x0, void *x1)
 	exl::hook::Initialize();
 
 	/* Install the hook at the provided function pointer. Function type is checked against the callback function. */
-	// StubCopyright::InstallAtFuncPtr(nn::oe::SetCopyrightVisibility);
 
 	namespace inst = exl::armv8::inst;
 	namespace reg = exl::armv8::reg;
